@@ -34,11 +34,12 @@
 <!-- Toast Container -->
 <div class="fixed top-4 right-4 z-50 flex flex-col gap-2 max-w-md">
 	{#each notifications as notification (notification.id)}
+		{@const Icon = icons[notification.type]}
 		<div
 			transition:fly={{ x: 300, duration: 300 }}
 			class="flex items-start gap-3 p-4 rounded-lg border shadow-lg {colors[notification.type]}"
 		>
-			<svelte:component this={icons[notification.type]} class="w-5 h-5 flex-shrink-0 {iconColors[notification.type]}" />
+			<Icon class="w-5 h-5 flex-shrink-0 {iconColors[notification.type]}" />
 			<p class="flex-1 text-sm font-medium">{notification.message}</p>
 			<button
 				type="button"

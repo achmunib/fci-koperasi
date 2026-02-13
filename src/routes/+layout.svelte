@@ -4,6 +4,7 @@
 	import { authStore } from '$lib/stores/auth';
 	import { AppLayout } from '$lib/components/layout';
 	import { Toast } from '$lib/components/common';
+	import { onMount } from 'svelte';
 	import '../app.css';
 	import favicon from '$lib/assets/favicon.svg';
 
@@ -25,6 +26,9 @@
 	// Public routes (no authentication required)
 	const publicRoutes = ['/login'];
 
+	// Track if we've initialized auth state
+	let mounted = $state(false);
+
 	// Use $derived to reactively compute values
 	const currentPath = $derived($page.url.pathname);
 	// Check authentication by looking at the store state
@@ -35,10 +39,16 @@
 	const isPublicRoute = $derived(publicRoutes.some((route) => currentPath.startsWith(route)));
 
 	// Determine if we should show the app layout
-	const showLayout = $derived(isAuthenticated && !isPublicRoute);
+	const showLayout = $derived(mounted && isAuthenticated && !isPublicRoute);
+
+	onMount(() => {
+		mounted = true;
+	});
 
 	// Handle redirects with $effect
 	$effect(() => {
+		if (!mounted) return;
+		
 		// Only redirect if we're not already on the target page
 		if (isProtectedRoute && !isAuthenticated && currentPath !== '/login') {
 			goto('/login');
@@ -55,7 +65,9 @@
 <!-- Toast Notifications -->
 <Toast />
 
-{#if showLayout}
+{#if !mounted}
+	<!-- Prevent flash by showing nothing during initial mount -->
+{:else if showLayout}
 	<AppLayout>
 		{@render children()}
 	</AppLayout>
