@@ -36,7 +36,6 @@ Thumbs.db
 .idea
 *.sublime-project
 *.sublime-workspace
-.kiro/*
 
 # Logs
 logs
