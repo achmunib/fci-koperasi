@@ -3,6 +3,22 @@
 	<head>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		
+		<!-- Preconnect to improve resource loading -->
+		<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
+		<link rel="dns-prefetch" href="https://fonts.googleapis.com" />
+		
+		<!-- Critical CSS for initial paint -->
+		<style>
+			/* Prevent layout shift with minimal critical CSS */
+			body { margin: 0; font-family: system-ui, -apple-system, sans-serif; }
+			.flex { display: flex; }
+			.min-h-screen { min-height: 100vh; }
+			.items-center { align-items: center; }
+			.justify-center { justify-content: center; }
+			.bg-gray-50 { background-color: #f9fafb; }
+		</style>
+		
 		%sveltekit.head%
 	</head>
 	<body data-sveltekit-preload-data="hover">
