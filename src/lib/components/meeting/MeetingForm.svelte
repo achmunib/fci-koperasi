@@ -17,23 +17,34 @@
 	let { meeting = null, onsubmit, oncancel, loading = false }: Props = $props();
 
 	let formData = $state({
-		title: meeting?.title || '',
-		date: meeting?.date
-			? new Date(meeting.date).toISOString().split('T')[0]
-			: new Date().toISOString().split('T')[0],
-		location: meeting?.location || '',
-		status: meeting?.status || 'scheduled'
+		title: '',
+		date: new Date().toISOString().split('T')[0],
+		location: '',
+		status: 'scheduled'
 	});
 
-	let agendaItems = $state<Array<{ title: string; description: string; requiresVote: boolean }>>(
-		meeting?.agendaItems?.map((a) => ({
-			title: a.title,
-			description: a.description,
-			requiresVote: a.requiresVote
-		})) || [{ title: '', description: '', requiresVote: false }]
-	);
+	let agendaItems = $state<Array<{ title: string; description: string; requiresVote: boolean }>>([
+		{ title: '', description: '', requiresVote: false }
+	]);
 
 	let errors = $state<Record<string, string>>({});
+
+	$effect(() => {
+		if (meeting) {
+			formData.title = meeting.title || '';
+			formData.date = meeting.date
+				? new Date(meeting.date).toISOString().split('T')[0]
+				: new Date().toISOString().split('T')[0];
+			formData.location = meeting.location || '';
+			formData.status = meeting.status || 'scheduled';
+
+			agendaItems = meeting.agendaItems?.map((a) => ({
+				title: a.title,
+				description: a.description,
+				requiresVote: a.requiresVote
+			})) || [{ title: '', description: '', requiresVote: false }];
+		}
+	});
 
 	const statusOptions = [
 		{ value: 'scheduled', label: 'Terjadwal' },
